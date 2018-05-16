@@ -1,0 +1,162 @@
+{
+  "ID": "50e19424-1e1e-4674-91a1-5fa5b812976b",
+  "Version": "3.10.0.0",
+  "Name": "Cat",
+  "Content": {
+    "Content": {
+      "Animation": {
+        "Duration": 35,
+        "Speed": 1.0,
+        "Timelines": [
+          {
+            "ActionTag": 1602702815,
+            "Property": "FileData",
+            "Frames": [
+              {
+                "TextureFile": {
+                  "Type": "PlistSubImage",
+                  "Path": "running cat/tile000.png",
+                  "Plist": "running_cat.plist"
+                },
+                "FrameIndex": 0,
+                "Tween": false,
+                "ctype": "TextureFrameData"
+              },
+              {
+                "TextureFile": {
+                  "Type": "PlistSubImage",
+                  "Path": "running cat/tile001.png",
+                  "Plist": "running_cat.plist"
+                },
+                "FrameIndex": 5,
+                "Tween": false,
+                "ctype": "TextureFrameData"
+              },
+              {
+                "TextureFile": {
+                  "Type": "PlistSubImage",
+                  "Path": "running cat/tile002.png",
+                  "Plist": "running_cat.plist"
+                },
+                "FrameIndex": 10,
+                "Tween": false,
+                "ctype": "TextureFrameData"
+              },
+              {
+                "TextureFile": {
+                  "Type": "PlistSubImage",
+                  "Path": "running cat/tile003.png",
+                  "Plist": "running_cat.plist"
+                },
+                "FrameIndex": 15,
+                "Tween": false,
+                "ctype": "TextureFrameData"
+              },
+              {
+                "TextureFile": {
+                  "Type": "PlistSubImage",
+                  "Path": "running cat/tile004.png",
+                  "Plist": "running_cat.plist"
+                },
+                "FrameIndex": 20,
+                "Tween": false,
+                "ctype": "TextureFrameData"
+              },
+              {
+                "TextureFile": {
+                  "Type": "PlistSubImage",
+                  "Path": "running cat/tile005.png",
+                  "Plist": "running_cat.plist"
+                },
+                "FrameIndex": 25,
+                "Tween": false,
+                "ctype": "TextureFrameData"
+              },
+              {
+                "TextureFile": {
+                  "Type": "PlistSubImage",
+                  "Path": "running cat/tile006.png",
+                  "Plist": "running_cat.plist"
+                },
+                "FrameIndex": 30,
+                "Tween": false,
+                "ctype": "TextureFrameData"
+              },
+              {
+                "TextureFile": {
+                  "Type": "PlistSubImage",
+                  "Path": "running cat/tile007.png",
+                  "Plist": "running_cat.plist"
+                },
+                "FrameIndex": 35,
+                "Tween": false,
+                "ctype": "TextureFrameData"
+              }
+            ],
+            "ctype": "TimelineData"
+          }
+        ],
+        "ctype": "TimelineActionData"
+      },
+      "AnimationList": [],
+      "ObjectData": {
+        "CustomClassName": "KittyCat",
+        "Tag": 32,
+        "Children": [
+          {
+            "FileData": {
+              "Type": "PlistSubImage",
+              "Path": "running cat/tile000.png",
+              "Plist": "running_cat.plist"
+            },
+            "BlendFunc": {
+              "Src": 1,
+              "Dst": 771
+            },
+            "AnchorPoint": {},
+            "Position": {
+              "X": 0.0,
+              "Y": 0.0
+            },
+            "Scale": {
+              "ScaleX": 1.0,
+              "ScaleY": 1.0
+            },
+            "CColor": {},
+            "IconVisible": false,
+            "PrePosition": {
+              "X": 0.0,
+              "Y": 0.0
+            },
+            "PreSize": {
+              "X": 0.0,
+              "Y": 0.0
+            },
+            "RightMargin": -512.0,
+            "TopMargin": -256.0,
+            "Tag": 14,
+            "ActionTag": 1602702815,
+            "Size": {
+              "X": 512.0,
+              "Y": 256.0
+            },
+            "Name": "Run",
+            "ctype": "SpriteObjectData"
+          }
+        ],
+        "Size": {
+          "X": 0.0,
+          "Y": 0.0
+        },
+        "Name": "Cat",
+        "ctype": "SingleNodeObjectData"
+      },
+      "UsedResources": [
+        "running_cat.plist",
+        "running_cat.png"
+      ],
+      "ctype": "GameFileData"
+    }
+  },
+  "Type": "Node"
+}

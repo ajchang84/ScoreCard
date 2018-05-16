@@ -1,0 +1,27 @@
+{
+    "project_type": "javascript",
+
+    "debugMode" : 1,
+    "showFPS" : false,
+    "frameRate" : 60,
+    "noCache" : false,
+    "id" : "gameCanvas",
+    "renderMode" : 0,
+    "engineDir":"frameworks/cocos2d-html5",
+
+    "modules" : ["cocos2d", "cocostudio", "gui"],
+
+    "jsList" : [
+        "src/resource.js",
+        "src/Constants.js",
+        "src/TestTableView.js",
+        "src/TrendScroll.js",
+        "src/BeadPlate.js",
+        "src/BigRoad.js",
+        "src/BigEyeBoy.js",
+        "src/SmallRoad.js",
+        "src/CockroachPig.js",
+        "src/CatSprite.js",
+        "src/app.js"
+    ]
+}

@@ -1,0 +1,34 @@
+<Solution>
+  <PropertyGroup Name="Baccarat" Version="3.10.0.0" Type="CocosStudio" />
+  <SolutionFolder>
+    <Group ctype="ResourceGroup">
+      <RootFolder Name=".">
+        <PlistImageFolder Image="beads.png" PListFile="beads.plist" Name=".beads_PList.Dir">
+          <PlistImageFile Name="ScoreBoard_red.png" Key="ScoreBoard/red.png" />
+          <PlistImageFile Name="ScoreBoard_blue.png" Key="ScoreBoard/blue.png" />
+          <PlistImageFile Name="ScoreBoard_green.png" Key="ScoreBoard/green.png" />
+        </PlistImageFolder>
+        <Folder Name="Images">
+          <Image Name="HelloWorld.png" />
+        </Folder>
+        <PlistImageFolder Image="running_cat.png" PListFile="running_cat.plist" Name=".running_cat_PList.Dir">
+          <PlistImageFile Name="running cat_tile000.png" Key="running cat/tile000.png" />
+          <PlistImageFile Name="running cat_tile001.png" Key="running cat/tile001.png" />
+          <PlistImageFile Name="running cat_tile002.png" Key="running cat/tile002.png" />
+          <PlistImageFile Name="running cat_tile003.png" Key="running cat/tile003.png" />
+          <PlistImageFile Name="running cat_tile004.png" Key="running cat/tile004.png" />
+          <PlistImageFile Name="running cat_tile005.png" Key="running cat/tile005.png" />
+          <PlistImageFile Name="running cat_tile006.png" Key="running cat/tile006.png" />
+          <PlistImageFile Name="running cat_tile007.png" Key="running cat/tile007.png" />
+        </PlistImageFolder>
+        <Folder Name="ScoreBoard">
+          <Image Name="BeadPlate.png" />
+        </Folder>
+        <Project Name="Cat.csd" Type="Node" />
+        <Project Name="MainScene.csd" Type="Scene" />
+        <Project Name="ScoreboardLayer.csd" Type="Layer" />
+        <Project Name="TestScene.csd" Type="Scene" />
+      </RootFolder>
+    </Group>
+  </SolutionFolder>
+</Solution>
