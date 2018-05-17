@@ -42,7 +42,7 @@ class BigEyeBoy extends TrendScroll {
             this.addChild(bead)
         });
     }
-    addBead(type = 1) {
+    addMarker(type = 1) {
         this.data.push(type);
         if (Math.ceil(this.data.length / this.rows) === this.lastViewableColumn) {
             this.addColumn();
@@ -72,15 +72,15 @@ class BEBMarker extends cc.Node {
         switch(type) {
             case 1:
                 Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.RED);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
+                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 1, cc.color.WHITE);
                 break;
             case 2:
                 Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.BLUE);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
+                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 1, cc.color.WHITE);
                 break;
             default:
                 Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.RED);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
+                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 1, cc.color.WHITE);
                 break;
         }
         this.addChild(Marker);

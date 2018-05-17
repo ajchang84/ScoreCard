@@ -28,13 +28,5 @@
         <LastRunType Value="Web" />
       </Value>
     </Item>
-    <Item Key="TabsParamsKey">
-      <Value ctype="TabsInfo">
-        <OpenedDocuments>
-          <FilePathData Path="Cat.csd" />
-        </OpenedDocuments>
-        <ActiveDocument Path="Cat.csd" />
-      </Value>
-    </Item>
   </Properties>
 </UserData>

@@ -16,7 +16,7 @@ class BigRoad extends TrendScroll {
         this.height = rows * tileSize;
         this.setDirection(ccui.ScrollView.DIR_HORIZONTAL)
         
-        // BeadPlate class properties
+        // TrendScroll class properties
         this.totalColumnsLoaded = this.bgColumns;
         this.lastViewableColumn = this.columns;
         this._initTrendScroll(res.small_30x6_png, res.small_1x6_png);
@@ -34,18 +34,18 @@ class BigRoad extends TrendScroll {
             this.data.splice(0, (columnsFilled - viewableFilledColumns) * this.rows);
         }
         this.data.forEach((value, index) => {   
-            const bead = new Ring(value);
+            const bead = new BRMarker(value);
             bead.x=Math.floor(index / this.rows) * this.tileSize;
             bead.y=this.height - (index % this.rows * this.tileSize);
             this.addChild(bead)
         });
     }
-    addBead(type = 1) {
+    addMarker(type = 1) {
         this.data.push(type);
         if (Math.ceil(this.data.length / this.rows) === this.lastViewableColumn) {
             this.addColumn();
         } 
-        const bead = new Ring(type);
+        const bead = new BRMarker(type);
         const currentIndex = this.data.length - 1
         bead.x=Math.floor(currentIndex / this.rows) * this.tileSize;
         bead.y=this.height - (currentIndex % this.rows * this.tileSize);
@@ -54,7 +54,7 @@ class BigRoad extends TrendScroll {
     }
 }
 
-class Ring extends cc.Node {
+class BRMarker extends cc.Node {
     constructor(type=1, tileSize=17) {
         super();
         this.attr({
@@ -70,17 +70,17 @@ class Ring extends cc.Node {
         switch(type) {
             case 1:
                 Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.RED);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
+                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 1, cc.color.WHITE);
                 Marker.drawSegment(cc.p(tileSize * 0.23,tileSize * 0.23), cc.p(tileSize * 0.76,tileSize * 0.76), 0.5, COLORS.GREEN);
                 break;
             case 2:
                 Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.BLUE);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
+                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 1, cc.color.WHITE);
                 Marker.drawSegment(cc.p(tileSize * 0.23,tileSize * 0.23), cc.p(tileSize * 0.76,tileSize * 0.76), 0.5, COLORS.GREEN);
                 break;
             default:
                 Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.RED);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
+                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 1, cc.color.WHITE);
                 Marker.drawSegment(cc.p(tileSize * 0.23,tileSize * 0.23), cc.p(tileSize * 0.76,tileSize * 0.76), 0.5, COLORS.GREEN);
                 break;
         }

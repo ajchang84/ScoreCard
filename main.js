@@ -69,8 +69,6 @@ cc.game.onStart = function(){
     cc.view.resizeWithBrowserSize(true);
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
-        // cc.director.runScene(new HelloWorldScene());
-        // cc.director.runScene(new TestTableView());
         cc.director.runScene(new TestScene());
     }, this);
 };

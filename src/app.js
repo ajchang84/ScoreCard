@@ -153,13 +153,13 @@ const TestScene = cc.Scene.extend({
         })
 
         button1.addClickEventListener(()=>{
-            Big_Road.addBead(1);
+            Big_Road.addMarker(1);
         })
         button2.addClickEventListener(()=>{
-            Bead_Plate.addBead(2);
+            Bead_Plate.addMarker(2);
         })
         button3.addClickEventListener(()=>{
-            Big_Eye_Boy.addBead(3);
+            Big_Eye_Boy.addMarker(3);
         })
 
         const backgroundLayer = new cc.LayerColor(cc.color.WHITE);
@@ -174,6 +174,11 @@ const TestScene = cc.Scene.extend({
         layer.addChild(button2);
         layer.addChild(button3);
         
+        layer.attr({
+            // scale: 0.922
+            scale: 1
+        })
+
         this.addChild(layer);
     }
 });

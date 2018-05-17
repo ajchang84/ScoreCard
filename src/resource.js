@@ -1,10 +1,4 @@
 var res = {
-    Cat_json : "res/Cat.json",
-    Cat_sprite : "res/running_cat.plist",
-    Cat_sprite_png : "res/running_cat.png",
-    MainScene_json : "res/MainScene.json",
-
-    TestScene_json : "res/TestScene.json",
     large_10x6_png : "res/ScoreBoard/large_10x6.png",
     large_1x6_png : "res/ScoreBoard/large_1x6.png",
     small_30x6_png : "res/ScoreBoard/small_30x6.png",
@@ -16,7 +10,8 @@ var res = {
     banker_sprite_png : "res/ScoreBoard/banker.png",
     player_sprite_png : "res/ScoreBoard/player.png",
     tie_sprite_png : "res/ScoreBoard/tie.png",
-
+    red_roach_png : "res/ScoreBoard/red_roach.png",
+    blue_roach_png : "res/ScoreBoard/blue_roach.png",
 };
 
 var g_resources = [];

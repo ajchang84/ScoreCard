@@ -16,13 +16,13 @@ class CockroachPig extends TrendScroll {
         this.height = rows * tileSize;
         this.setDirection(ccui.ScrollView.DIR_HORIZONTAL)
 
-        // BeadPlate class properties
+        // TrendScroll class properties
         this.totalColumnsLoaded = this.bgColumns;
         this.lastViewableColumn = this.columns;
         this.step = 2;
         this._initTrendScroll(res.small_15x3_bottom_png, res.small_1x3_bottom_png);
 
-        this.data = Array.from({length: 0}, () => Math.floor(Math.random() * 2 + 1));
+        this.data = Array.from({length: 1400}, () => Math.floor(Math.random() * 2 + 1));
     }
     onEnter() {
         super.onEnter();
@@ -42,7 +42,7 @@ class CockroachPig extends TrendScroll {
             this.addChild(bead)
         });
     }
-    addBead(type = 1) {
+    addMarker(type = 1) {
         this.data.push(type);
         if (Math.ceil(this.data.length / this.rows) === this.lastViewableColumn) {
             this.addColumn();
@@ -56,35 +56,20 @@ class CockroachPig extends TrendScroll {
     }
 }
 
-class CPMarker extends cc.Node {
-    constructor(type=1, tileSize=8.5) {
+class CPMarker extends cc.Sprite {
+    constructor(type=1) {
         super();
-        this.attr({
-            width: tileSize,
-            height: tileSize,
-            anchorX: 0,
-            anchorY: 1,
-            zIndex: 1
-        });
-
-        const Marker = new cc.DrawNode();
-        const halfTileSize = tileSize / 2;
         switch(type) {
             case 1:
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.RED);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
+                this.initWithFile(res.red_roach_png)
                 break;
             case 2:
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.BLUE);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
-                break;
-            default:
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.RED);
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 2, cc.color.WHITE);
+                this.initWithFile(res.blue_roach_png)
                 break;
         }
-        this.addChild(Marker);
-
-
+        this.attr({
+            anchorX: 0,
+            anchorY: 1
+        });
     }
 }

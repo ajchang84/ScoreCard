@@ -16,7 +16,7 @@ class BeadPlate extends TrendScroll {
         this.height = rows * tileSize;
         this.setDirection(ccui.ScrollView.DIR_HORIZONTAL)
 
-        // BeadPlate class properties
+        // TrendScroll class properties
         this.totalColumnsLoaded = this.bgColumns;
         this.lastViewableColumn = this.columns;
         this._initTrendScroll(res.large_10x6_png, res.large_1x6_png);
@@ -34,18 +34,18 @@ class BeadPlate extends TrendScroll {
             this.data.splice(0, (columnsFilled - viewableFilledColumns) * this.rows);
         }
         this.data.forEach((value, index) => {   
-            const bead = new Bead(value);
+            const bead = new BPMarker(value);
             bead.x=Math.floor(index / this.rows) * this.tileSize;
             bead.y=this.height - (index % this.rows * this.tileSize);
             this.addChild(bead)
         });
     }
-    addBead(type = 1) {
+    addMarker(type = 1) {
         this.data.push(type);
         if (Math.ceil(this.data.length / this.rows) === this.lastViewableColumn) {
             this.addColumn();
         } 
-        const bead = new Bead(type);
+        const bead = new BPMarker(type);
         const currentIndex = this.data.length - 1
         bead.x=Math.floor(currentIndex / this.rows) * this.tileSize;
         bead.y=this.height - (currentIndex % this.rows * this.tileSize);
@@ -54,28 +54,27 @@ class BeadPlate extends TrendScroll {
     }
 }
 
-class Bead extends cc.Sprite {
+class BPMarker extends cc.Sprite {
     constructor(type=1) {
         super();
         let text;
         switch(type) {
             case 1:
                 this.initWithFile(res.banker_sprite_png)
-                text = cc.LabelTTF.create("庄", "Arial", 14);
+                text = cc.LabelTTF.create("庄", "Arial Black", 16);
                 break;
             case 2:
                 this.initWithFile(res.player_sprite_png)
-                text = cc.LabelTTF.create("闲", "Arial", 14);
+                text = cc.LabelTTF.create("闲", "Arial Black", 16);
                 break;
             case 3:
                 this.initWithFile(res.tie_sprite_png)
-                text = cc.LabelTTF.create("和", "Arial", 14);
+                text = cc.LabelTTF.create("和", "Arial Black", 16);
                 break;
         }
         this.attr({
             anchorX: 0,
             anchorY: 1,
-            zIndex: 1
         });
         text.attr({
             x: this.width / 2,
@@ -100,9 +99,7 @@ class Bead extends cc.Sprite {
             y: this.height * 0.15
         });
 
-
         this.addChild(RedPair);
         this.addChild(BluePair);
-
     }  
 }
