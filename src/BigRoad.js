@@ -99,7 +99,7 @@ class BigRoad extends TrendScroll {
             this.addColumn();
         } 
         const bead = new BRMarker(type);
-        const currentIndex = this.data.length - 1
+        const currentIndex = this.data.length - 1;
         bead.x=Math.floor(currentIndex / this.rows) * this.tileSize;
         bead.y=this.height - (currentIndex % this.rows * this.tileSize);
 
