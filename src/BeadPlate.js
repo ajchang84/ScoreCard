@@ -9,34 +9,33 @@ class BeadPlate extends TrendScroll {
         this.bgColumns = bgColumns;
 
         // ScrollView class properties
-        this.touchEnabled = false;
         this.innerWidth = columns * tileSize;
         this.innerHeight = rows * tileSize; 
         this.width = columns * tileSize;
         this.height = rows * tileSize;
-        this.setDirection(ccui.ScrollView.DIR_HORIZONTAL)
 
         // TrendScroll class properties
         this.totalColumnsLoaded = this.bgColumns;
         this.lastViewableColumn = this.columns;
         this._initTrendScroll(res.large_10x6_png, res.large_1x6_png);
-        this.data = Array.from({length: 910}, () => Math.floor(Math.random() * 3 + 1));
+        this.data = [];
     }
     onEnter() {
         super.onEnter();
-        this._loadBeads();
         // this.schedule(this.addColumn, 1, 13, 1);
     }  
-    _loadBeads() {
+    loadData(data = []) {
+        this.data = data;
         const columnsFilled = Math.ceil(this.data.length / this.rows);
         const viewableFilledColumns = this.columns - 1;
         if (columnsFilled > viewableFilledColumns) {
-            this.data.splice(0, (columnsFilled - viewableFilledColumns) * this.rows);
+            this.data = this.data.slice((columnsFilled - viewableFilledColumns) * this.rows);
         }
         this.data.forEach((value, index) => {   
             const bead = new BPMarker(value);
             bead.x=Math.floor(index / this.rows) * this.tileSize;
             bead.y=this.height - (index % this.rows * this.tileSize);
+            bead.zIndex=1
             this.addChild(bead)
         });
     }
@@ -49,7 +48,6 @@ class BeadPlate extends TrendScroll {
         const currentIndex = this.data.length - 1
         bead.x=Math.floor(currentIndex / this.rows) * this.tileSize;
         bead.y=this.height - (currentIndex % this.rows * this.tileSize);
-
         this.addChild(bead)
     }
 }
@@ -84,22 +82,27 @@ class BPMarker extends cc.Sprite {
     }
     onEnter() {
         super.onEnter();
-        const RedPair = new cc.DrawNode();
-        RedPair.drawDot(cc.p(0,0), 4, cc.color.WHITE);
-        RedPair.drawDot(cc.p(0,0), 3, COLORS.RED);
-        RedPair.attr({
-            x: this.width * 0.15,
-            y: this.height * 0.85
-        });
-        const BluePair = new cc.DrawNode();
-        BluePair.drawDot(cc.p(0,0), 4, cc.color.WHITE);
-        BluePair.drawDot(cc.p(0,0), 3, COLORS.BLUE);
-        BluePair.attr({
-            x: this.width * 0.85,
-            y: this.height * 0.15
-        });
-
-        this.addChild(RedPair);
-        this.addChild(BluePair);
+        const isRedPair = Math.random()
+        const isBluePair = Math.random()
+        if (isRedPair <= 0.0588) {
+            const RedPair = new cc.DrawNode();
+            RedPair.drawDot(cc.p(0,0), 4, cc.color.WHITE);
+            RedPair.drawDot(cc.p(0,0), 3, COLORS.RED);
+            RedPair.attr({
+                x: this.width * 0.15,
+                y: this.height * 0.85
+            });  
+            this.addChild(RedPair);
+        }
+        if (isBluePair <= 0.0769) {
+            const BluePair = new cc.DrawNode();
+            BluePair.drawDot(cc.p(0,0), 4, cc.color.WHITE);
+            BluePair.drawDot(cc.p(0,0), 3, COLORS.BLUE);
+            BluePair.attr({
+                x: this.width * 0.85,
+                y: this.height * 0.15
+            });
+            this.addChild(BluePair);
+        }
     }  
 }

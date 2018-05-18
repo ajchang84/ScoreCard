@@ -9,12 +9,10 @@ class BigEyeBoy extends TrendScroll {
         this.bgColumns = bgColumns;
 
         // ScrollView class properties
-        this.touchEnabled = false;
         this.innerWidth = columns * tileSize;
         this.innerHeight = rows * tileSize; 
         this.width = columns * tileSize;
         this.height = rows * tileSize;
-        this.setDirection(ccui.ScrollView.DIR_HORIZONTAL)
 
         // TrendScroll class properties
         this.totalColumnsLoaded = this.bgColumns;
@@ -22,7 +20,7 @@ class BigEyeBoy extends TrendScroll {
         this.step = 2;
         this._initTrendScroll(res.small_30x3_png, res.small_1x3_png);
 
-        this.data = Array.from({length: 1000}, () => Math.floor(Math.random() * 2 + 1));
+        this.data = Array.from({length: 0}, () => Math.floor(Math.random() * 2 + 1));
     }
     onEnter() {
         super.onEnter();

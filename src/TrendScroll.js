@@ -8,6 +8,10 @@ class TrendScroll extends ccui.ScrollView {
         this.step = 1;
         this.totalColumnsLoaded = 0;
         this.lastViewableColumn = 0;
+
+        // ScrollView class properties
+        this.touchEnabled = false;
+        this.setDirection(ccui.ScrollView.DIR_HORIZONTAL)
     }
     onEnter() {
         super.onEnter();
@@ -29,7 +33,6 @@ class TrendScroll extends ccui.ScrollView {
     _appendBackground(offset = this.tileSize * this.bgColumns) {
         if (this.lastViewableColumn > this.totalColumnsLoaded) {
             const newCol = cc.Sprite.create(this.appendBg);
-            console.log('append')
             newCol.attr({
                 anchorX: 0,
                 anchorY: 0,

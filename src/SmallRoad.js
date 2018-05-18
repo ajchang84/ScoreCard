@@ -9,12 +9,10 @@ class SmallRoad extends TrendScroll {
         this.bgColumns = bgColumns;
 
         // ScrollView class properties
-        this.touchEnabled = false;
         this.innerWidth = columns * tileSize;
         this.innerHeight = rows * tileSize; 
         this.width = columns * tileSize;
         this.height = rows * tileSize;
-        this.setDirection(ccui.ScrollView.DIR_HORIZONTAL)
 
         // BeadPlate class properties
         this.totalColumnsLoaded = this.bgColumns;
@@ -22,7 +20,7 @@ class SmallRoad extends TrendScroll {
         this.step = 2
         this._initTrendScroll(res.small_15x3_bottom_png, res.small_1x3_bottom_png);
 
-        this.data = Array.from({length: 910}, () => Math.floor(Math.random() * 2 + 1));
+        this.data = Array.from({length: 0}, () => Math.floor(Math.random() * 2 + 1));
     }
     onEnter() {
         super.onEnter();
