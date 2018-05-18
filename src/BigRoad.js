@@ -19,34 +19,28 @@ class BigRoad extends TrendScroll {
         this.lastViewableColumn = this.columns;
         this._initTrendScroll(res.small_30x6_png, res.small_1x6_png);
         this.data = [];
+        this.predictRed = [0,0];
+        this.predictBlue = [0,0];
+        this.predictGreen = [0,0];
+
+        this.bend = 6;
+        this.tails = 0;
+        this.shift = 0;
     }
     onEnter() {
         super.onEnter();
         // this.schedule(this.addColumn, 1, 13, 1);
     }  
     loadData(data=[]) {
-        this.data = this.sortData(data);
-
+        this.data = this.convertData(data);
+        console.log(this.data)
         const columnsFilled = this.data.length;
         const viewableFilledColumns = this.columns - 1;
+        console.log(viewableFilledColumns, columnsFilled)
         if (columnsFilled > viewableFilledColumns) {
-            this.data = this.data.slice((columnsFilled - viewableFilledColumns) * this.rows);
+            this.data = this.data.slice((columnsFilled - viewableFilledColumns));
         }
-        console.log(this.data)
-        // this.data = [
-        //     {
-        //         value: 1,
-        //         bend: 6,
-        //         length: 8,
-        //         ties: {2: 5}
-        //     },
-        //     {
-        //         value: 2,
-        //         bend: 6,
-        //         length: 3,
-        //         ties: {1: 2}
-        //     }
-        // ]
+
         this.data.forEach((column, colIndex) => {
             Array(column.length).fill(null).forEach((row, rowIndex) => {
                 this.fillTile(column, colIndex, rowIndex)
@@ -54,56 +48,113 @@ class BigRoad extends TrendScroll {
         });
     }
     fillTile(data, col, row) {
+        console.log('bend', this.bend)
         const bead = new BRMarker(data.value, data.ties[row + 1]);
-        if (row < data.bend) {
+        if (data.bend === 1) {
+            bead.x=(col + data.shift) * this.tileSize;
+            bead.y=this.height;
+        } else if (row < data.bend) {
             bead.x=col * this.tileSize;
             bead.y=this.height - (row * this.tileSize);
         } else {
             bead.x=col * this.tileSize + (row - (data.bend - 1)) * this.tileSize;
             bead.y=this.height - ((data.bend - 1) * this.tileSize);
         }
+        if (data.value === 1) {
+            this.predictRed = [col + data.shift, row + 1],
+            this.predictBlue = [col + data.shift + 1, 0],
+            this.predictGreen = [col + data.shift, row]      
+        } else if (data.value === 2) {
+            this.predictBlue = [col + data.shift, row + 1],
+            this.predictRed = [col + data.shift + 1, 0],
+            this.predictGreen = [col + data.shift, row]      
+        }
         this.addChild(bead)
     }
-    sortData(data) {
+
+    convertData(data, prevData = []) {
         const newCol = {
             value: null,
             bend: 6,
+            offender: 0,
             length: 0,
-            ties: {}
+            tails: {},
+            ties: {},
+            shift: 0
         }
         return data.reduce((accum, value)=>{
-            let curObj = accum[accum.length-1];
-            if (value === 3 && accum.length > 0) {
-                if (!curObj.ties[curObj.length]) {
-                    accum[accum.length-1] = {...curObj, ties: {...curObj.ties, [curObj.length]: 1}};
+            let workingIndex = accum.length - 1;
+            let curObj = accum[workingIndex];
+
+            if (accum.length === 0) {
+                if (value === 3) {
+                    return [...accum, {...newCol, length: 1, ties: {...newCol.ties, 1: 1}}];
                 } else {
-                    accum[accum.length-1] = {...curObj, ties: {...curObj.ties, [curObj.length]: curObj.ties[curObj.length] + 1}};
+                    console.log('init a column')
+                    return [...accum, {...newCol, value, length: 1}];
                 }
-                return [...accum];
-            } else if (accum.length === 0) {
-                return [...accum, {...newCol, value, length: 1}];
-            } else if (value === curObj.value) {
-                accum[accum.length-1] = {...curObj, length: curObj.length + 1 };
-                return [...accum];
-            } else if (value !== curObj.value) {
-                return [...accum, {...newCol, value, length: 1}];
-            } else {
-                return accum;
             }
-        },[]);
+            if (accum.length > 0) {
+                if (value === 3) {
+                    if (!curObj.ties[curObj.length]) {
+                        accum[workingIndex] = {...curObj, ties: {...curObj.ties, [curObj.length]: 1}};
+                    } else {
+                        accum[workingIndex] = {...curObj, ties: {...curObj.ties, [curObj.length]: curObj.ties[curObj.length] + 1}};
+                    }
+                    return [...accum];      
+                } else if (value !== curObj.value) {
+                    if (curObj.value === null) {
+                        console.log('create new column after tie')
+                        accum[workingIndex] = {...curObj, value}
+                        return [...accum];
+                    } else {
+                        console.log('create new column')
+                        let tails = {};
+                        Object.keys(curObj.tails).forEach(key=>{
+                            tails[key] = curObj.tails[key] - 1;
+                        })
+                        tails[this.bend] = curObj.length - this.bend
+                        console.log('tails', tails)
+                        for (let key of Object.keys(tails)) {
+                            if (tails[key] > 0 && key != 1) {       
+                                console.log('key', key)
+                                this.bend = key - 1;
+                                break;
+                            }
+                            this.bend = 6
+                            console.log(this.bend)
+                        };
+                        return [...accum, {...newCol, value, length: 1, bend: this.bend, tails: {...tails}}];
+                    }
+                } else if (value === curObj.value) {
+                    console.log('add to column')
+                    let shift = 0;
+                    if (this.bend === 1) {
+                        console.log('create new column')  
+                        let tails = {};
+                        Object.keys(curObj.tails).forEach(key=>{
+                            tails[key] = curObj.tails[key] - 1;
+                        })
+                        console.log('tails', tails)
+        
+                        shift++;
+                    }
+                    accum[workingIndex] = {...curObj, length: curObj.length + 1, shift: shift };
+                    return [...accum];
+                } 
+            }
+        },prevData);
     }
 
     addMarker(type = 1) {
-        this.data.push(type);
-        if (Math.ceil(this.data.length / this.rows) === this.lastViewableColumn) {
-            this.addColumn();
-        } 
-        const bead = new BRMarker(type);
-        const currentIndex = this.data.length - 1;
-        bead.x=Math.floor(currentIndex / this.rows) * this.tileSize;
-        bead.y=this.height - (currentIndex % this.rows * this.tileSize);
-
-        this.addChild(bead)
+        this.data = this.convertData([type], this.data);
+        if (type === 1) {
+            this.fillTile(this.data[this.data.length-1], this.predictRed[0], this.predictRed[1])
+        } else if (type === 2) {
+            this.fillTile(this.data[this.data.length-1], this.predictBlue[0], this.predictBlue[1])
+        } else {
+            this.fillTile(this.data[this.data.length-1], this.predictGreen[0], this.predictGreen[1])
+        }
     }
 }
 
@@ -130,7 +181,6 @@ class BRMarker extends cc.Node {
                 Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 1, cc.color.WHITE);
                 break;
             default:
-                Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize), COLORS.RED);
                 Marker.drawDot(cc.p(halfTileSize,halfTileSize), Math.floor(halfTileSize) - 1, cc.color.WHITE);
                 break;
         }
