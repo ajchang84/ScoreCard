@@ -13,7 +13,7 @@ class BigEyeBoy extends TrendScroll {
         this.innerHeight = rows * tileSize; 
         this.width = columns * tileSize;
         this.height = rows * tileSize;
-
+        
         // TrendScroll class properties
         this.totalColumnsLoaded = this.bgColumns;
         this.lastViewableColumn = this.columns;

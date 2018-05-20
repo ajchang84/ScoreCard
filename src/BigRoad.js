@@ -48,16 +48,12 @@ class BigRoad extends TrendScroll {
         });
     }
     fillTile(data, col, row) {
-        console.log('bend', this.bend)
         const bead = new BRMarker(data.value, data.ties[row + 1]);
-        if (data.bend === 1) {
+        if (row < data.bend) {
             bead.x=(col + data.shift) * this.tileSize;
-            bead.y=this.height;
-        } else if (row < data.bend) {
-            bead.x=col * this.tileSize;
             bead.y=this.height - (row * this.tileSize);
         } else {
-            bead.x=col * this.tileSize + (row - (data.bend - 1)) * this.tileSize;
+            bead.x=(col + data.shift) * this.tileSize + (row - (data.bend - 1)) * this.tileSize;
             bead.y=this.height - ((data.bend - 1) * this.tileSize);
         }
         if (data.value === 1) {
@@ -86,61 +82,82 @@ class BigRoad extends TrendScroll {
             let workingIndex = accum.length - 1;
             let curObj = accum[workingIndex];
 
+            // when there is 0 data
             if (accum.length === 0) {
+                // if tie
                 if (value === 3) {
+                    console.log('init a column with tie')
                     return [...accum, {...newCol, length: 1, ties: {...newCol.ties, 1: 1}}];
+                // if not tie
                 } else {
                     console.log('init a column')
                     return [...accum, {...newCol, value, length: 1}];
                 }
             }
+            // when there is data
             if (accum.length > 0) {
+                // if tie
                 if (value === 3) {
+                    // if new tie
                     if (!curObj.ties[curObj.length]) {
+                        console.log('add new tie')
                         accum[workingIndex] = {...curObj, ties: {...curObj.ties, [curObj.length]: 1}};
+                    // if tie again
                     } else {
+                        console.log('add to old tie')
                         accum[workingIndex] = {...curObj, ties: {...curObj.ties, [curObj.length]: curObj.ties[curObj.length] + 1}};
                     }
-                    return [...accum];      
+                    return [...accum];     
+                // if new result
                 } else if (value !== curObj.value) {
+                    // if column value still null
                     if (curObj.value === null) {
                         console.log('create new column after tie')
                         accum[workingIndex] = {...curObj, value}
                         return [...accum];
+                    // create a new column with value
                     } else {
                         console.log('create new column')
                         let tails = {};
+                        let newBend = 0;
                         Object.keys(curObj.tails).forEach(key=>{
-                            tails[key] = curObj.tails[key] - 1;
-                        })
-                        tails[this.bend] = curObj.length - this.bend
-                        console.log('tails', tails)
-                        for (let key of Object.keys(tails)) {
-                            if (tails[key] > 0 && key != 1) {       
-                                console.log('key', key)
-                                this.bend = key - 1;
-                                break;
+                            if (curObj.tails[key] > 1) {
+                                tails[key] = curObj.tails[key] - 1;
                             }
-                            this.bend = 6
-                            console.log(this.bend)
-                        };
-                        return [...accum, {...newCol, value, length: 1, bend: this.bend, tails: {...tails}}];
+                        })
+                        if (curObj.bend > 1) {
+                            tails[curObj.bend] = curObj.length - curObj.bend
+                        }
+                        if (Object.keys(tails).length) {
+                            newBend = Object.keys(tails)[0] - 1;
+                        } else {
+                            newBend = 6
+                        }
+                        return [...accum, {...newCol, value, length: 1, bend: newBend, tails: {...tails}}];
                     }
                 } else if (value === curObj.value) {
                     console.log('add to column')
-                    let shift = 0;
-                    if (this.bend === 1) {
+                    if (curObj.bend === 1) {
                         console.log('create new column')  
+                        let shift = 0;
                         let tails = {};
+                        // let newBend = 0;
                         Object.keys(curObj.tails).forEach(key=>{
-                            tails[key] = curObj.tails[key] - 1;
+                            if (curObj.tails[key] > 1) {
+                                tails[key] = curObj.tails[key] - 1;
+                            }
                         })
-                        console.log('tails', tails)
-        
-                        shift++;
+                        // if (Object.keys(tails).length) {
+                        //     newBend = Object.keys(tails)[0] - 1;
+                        // } else {
+                        //     newBend = 6
+                        // }
+                        accum[workingIndex] = {...curObj, length: curObj.length + 1, tails: {...tails}, shift: curObj.shift + 1 };
+                        return [...accum]; 
+                    } else {
+                        accum[workingIndex] = {...curObj, length: curObj.length + 1 };
+                        return [...accum];
                     }
-                    accum[workingIndex] = {...curObj, length: curObj.length + 1, shift: shift };
-                    return [...accum];
                 } 
             }
         },prevData);
