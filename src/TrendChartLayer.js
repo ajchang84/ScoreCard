@@ -5,10 +5,10 @@ class TrendChartLayer extends cc.Layer {
         super();
         this.scale = .922;
         // this.scale = 1
-        // this.data = Array.from({length: 0}, () => Math.floor(Math.random() * 3 + 1));
+        this.data = Array.from({length: 25}, () => Math.floor(Math.random() * 3 + 1));
         // this.data = [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2];
         // this.data = [1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,2,2,2,2,2];
-        this.data = [1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,1,1,1,2,2,2,1];
+        // this.data = [];
     }
 
     onEnter() {

@@ -22,10 +22,6 @@ class BigRoad extends TrendScroll {
         this.predictRed = [0,0];
         this.predictBlue = [0,0];
         this.predictGreen = [0,0];
-
-        this.bend = 6;
-        this.tails = 0;
-        this.shift = 0;
     }
     onEnter() {
         super.onEnter();
@@ -33,7 +29,6 @@ class BigRoad extends TrendScroll {
     }  
     loadData(data=[]) {
         this.data = this.convertData(data);
-        console.log(this.data)
         const columnsFilled = this.data.length;
         const viewableFilledColumns = this.columns - 1;
         console.log(viewableFilledColumns, columnsFilled)
@@ -57,13 +52,13 @@ class BigRoad extends TrendScroll {
             bead.y=this.height - ((data.bend - 1) * this.tileSize);
         }
         if (data.value === 1) {
-            this.predictRed = [col + data.shift, row + 1],
-            this.predictBlue = [col + data.shift + 1, 0],
-            this.predictGreen = [col + data.shift, row]      
+            this.predictRed = [col, row + 1],
+            this.predictBlue = [col + 1, 0],
+            this.predictGreen = [col, row]      
         } else if (data.value === 2) {
-            this.predictBlue = [col + data.shift, row + 1],
-            this.predictRed = [col + data.shift + 1, 0],
-            this.predictGreen = [col + data.shift, row]      
+            this.predictBlue = [col, row + 1],
+            this.predictRed = [col + 1, 0],
+            this.predictGreen = [col, row]      
         }
         this.addChild(bead)
     }
@@ -72,7 +67,6 @@ class BigRoad extends TrendScroll {
         const newCol = {
             value: null,
             bend: 6,
-            offender: 0,
             length: 0,
             tails: {},
             ties: {},
@@ -119,40 +113,36 @@ class BigRoad extends TrendScroll {
                     } else {
                         console.log('create new column')
                         let tails = {};
-                        let newBend = 0;
+                        let shift = curObj.shift;
+                        let bend = curObj.bend;
                         Object.keys(curObj.tails).forEach(key=>{
                             if (curObj.tails[key] > 1) {
                                 tails[key] = curObj.tails[key] - 1;
                             }
                         })
-                        if (curObj.bend > 1) {
+                        if (curObj.bend > 1 && curObj.length > curObj.bend) {
                             tails[curObj.bend] = curObj.length - curObj.bend
+                        } else if (curObj.bend === 1) {
+                            shift = shift + (curObj.length - curObj.bend);
                         }
-                        if (Object.keys(tails).length) {
-                            newBend = Object.keys(tails)[0] - 1;
-                        } else {
-                            newBend = 6
+                        if (Object.keys(tails).length && curObj.length > curObj.bend) {
+                            bend = Object.keys(tails)[0] - 1;
+                        } else if (!Object.keys(tails).length) {
+                            bend = 6
                         }
-                        return [...accum, {...newCol, value, length: 1, bend: newBend, tails: {...tails}}];
+                        return [...accum, {...newCol, value, length: 1, bend, tails: {...tails}, shift}];
                     }
                 } else if (value === curObj.value) {
                     console.log('add to column')
                     if (curObj.bend === 1) {
                         console.log('create new column')  
-                        let shift = 0;
                         let tails = {};
-                        // let newBend = 0;
                         Object.keys(curObj.tails).forEach(key=>{
                             if (curObj.tails[key] > 1) {
                                 tails[key] = curObj.tails[key] - 1;
                             }
                         })
-                        // if (Object.keys(tails).length) {
-                        //     newBend = Object.keys(tails)[0] - 1;
-                        // } else {
-                        //     newBend = 6
-                        // }
-                        accum[workingIndex] = {...curObj, length: curObj.length + 1, tails: {...tails}, shift: curObj.shift + 1 };
+                        accum[workingIndex] = {...curObj, length: curObj.length + 1, tails: {...tails}};
                         return [...accum]; 
                     } else {
                         accum[workingIndex] = {...curObj, length: curObj.length + 1 };
@@ -165,6 +155,7 @@ class BigRoad extends TrendScroll {
 
     addMarker(type = 1) {
         this.data = this.convertData([type], this.data);
+        console.log(this.data)
         if (type === 1) {
             this.fillTile(this.data[this.data.length-1], this.predictRed[0], this.predictRed[1])
         } else if (type === 2) {
