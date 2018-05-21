@@ -29,27 +29,29 @@ class BigRoad extends TrendScroll {
     }  
     loadData(data=[]) {
         this.data = this.convertData(data);
-        const columnsFilled = this.data.length;
-        const viewableFilledColumns = this.columns - 1;
-        console.log(viewableFilledColumns, columnsFilled)
-        if (columnsFilled > viewableFilledColumns) {
-            this.data = this.data.slice((columnsFilled - viewableFilledColumns));
-        }
+        // let lastColumn = this.data[this.data.length - 1];
+        // const columnsFilled = this.data.length + lastColumn.shiftCols + lastColumn.rows - lastColumn.maxRows;
+        // console.log(this.data.length, this.data[this.data.length - 1] )
+        // const viewableFilledColumns = this.columns - 1;
+        // console.log(viewableFilledColumns, columnsFilled)
+        // if (columnsFilled > viewableFilledColumns) {
+        //     this.data = this.data.slice((columnsFilled - viewableFilledColumns));
+        // }
 
         this.data.forEach((column, colIndex) => {
-            Array(column.length).fill(null).forEach((row, rowIndex) => {
+            Array(column.rows).fill(null).forEach((row, rowIndex) => {
                 this.fillTile(column, colIndex, rowIndex)
             })
         });
     }
     fillTile(data, col, row) {
         const bead = new BRMarker(data.value, data.ties[row + 1]);
-        if (row < data.bend) {
-            bead.x=(col + data.shift) * this.tileSize;
+        if (row < data.maxRows) {
+            bead.x=(col + data.shiftCols) * this.tileSize;
             bead.y=this.height - (row * this.tileSize);
         } else {
-            bead.x=(col + data.shift) * this.tileSize + (row - (data.bend - 1)) * this.tileSize;
-            bead.y=this.height - ((data.bend - 1) * this.tileSize);
+            bead.x=(col + data.shiftCols) * this.tileSize + (row - (data.maxRows - 1)) * this.tileSize;
+            bead.y=this.height - ((data.maxRows - 1) * this.tileSize);
         }
         if (data.value === 1) {
             this.predictRed = [col, row + 1],
@@ -66,96 +68,72 @@ class BigRoad extends TrendScroll {
     convertData(data, prevData = []) {
         const newCol = {
             value: null,
-            bend: 6,
-            length: 0,
+            maxRows: 6,
+            rows: 0,
             tails: {},
             ties: {},
-            shift: 0
+            shiftCols: 0
         }
-        return data.reduce((accum, value)=>{
-            let workingIndex = accum.length - 1;
-            let curObj = accum[workingIndex];
+        return data.reduce((prev, value)=>{
+            let lastIndex = prev.length - 1;
+            let prevObj = prev[lastIndex];
 
-            // when there is 0 data
-            if (accum.length === 0) {
-                // if tie
-                if (value === 3) {
-                    console.log('init a column with tie')
-                    return [...accum, {...newCol, length: 1, ties: {...newCol.ties, 1: 1}}];
-                // if not tie
-                } else {
-                    console.log('init a column')
-                    return [...accum, {...newCol, value, length: 1}];
-                }
+            if (prev.length === 0) { // create first column
+                if (value === 3) return [{...newCol, rows: 1, ties: {1: 1}}];
+                else return [{...newCol, value, rows: 1}];
             }
-            // when there is data
-            if (accum.length > 0) {
-                // if tie
-                if (value === 3) {
-                    // if new tie
-                    if (!curObj.ties[curObj.length]) {
-                        console.log('add new tie')
-                        accum[workingIndex] = {...curObj, ties: {...curObj.ties, [curObj.length]: 1}};
-                    // if tie again
-                    } else {
-                        console.log('add to old tie')
-                        accum[workingIndex] = {...curObj, ties: {...curObj.ties, [curObj.length]: curObj.ties[curObj.length] + 1}};
-                    }
-                    return [...accum];     
-                // if new result
-                } else if (value !== curObj.value) {
+            if (prev.length > 0) { // first column exists
+                if (value === 3) { // if tie, add tie to row, or accumulate tie to row
+                    if (!prevObj.ties[prevObj.rows]) prev[lastIndex] = {...prevObj, ties: {...prevObj.ties, [prevObj.rows]: 1}};
+                    else prev[lastIndex] = {...prevObj, ties: {...prevObj.ties, [prevObj.rows]: prevObj.ties[prevObj.rows] + 1}};
+                    return [...prev];     
+                } else if (value !== prevObj.value) { // new value from previous
                     // if column value still null
-                    if (curObj.value === null) {
-                        console.log('create new column after tie')
-                        accum[workingIndex] = {...curObj, value}
-                        return [...accum];
+                    if (prevObj.value === null) {
+                        prev[lastIndex] = {...prevObj, value}
+                        return [...prev];
                     // create a new column with value
                     } else {
-                        console.log('create new column')
-                        let tails = {};
-                        let shift = curObj.shift;
-                        let bend = curObj.bend;
-                        Object.keys(curObj.tails).forEach(key=>{
-                            if (curObj.tails[key] > 1) {
-                                tails[key] = curObj.tails[key] - 1;
-                            }
-                        })
-                        if (curObj.bend > 1 && curObj.length > curObj.bend) {
-                            tails[curObj.bend] = curObj.length - curObj.bend
-                        } else if (curObj.bend === 1) {
-                            shift = shift + (curObj.length - curObj.bend);
-                        }
-                        if (Object.keys(tails).length && curObj.length > curObj.bend) {
-                            bend = Object.keys(tails)[0] - 1;
-                        } else if (!Object.keys(tails).length) {
-                            bend = 6
-                        }
-                        return [...accum, {...newCol, value, length: 1, bend, tails: {...tails}, shift}];
+                        let shiftCols = prevObj.shiftCols;
+                        let maxRows = prevObj.maxRows;
+                        const didBend = prevObj.rows > maxRows;
+                        this._decrementTails(prevObj.tails);
+                        if (maxRows === 1) shiftCols += (prevObj.rows - maxRows); // if max rows at 1, increment shift columns
+                        if (maxRows > 1 && didBend) prevObj.tails[maxRows] = prevObj.rows - maxRows; // if more rows exceed max, create tail
+                        if (Object.keys(prevObj.tails).length) maxRows = Object.keys(prevObj.tails)[0] - 1; // set max to closest tail
+                        if (!Object.keys(prevObj.tails).length) maxRows = 6; // if tails are empty, set max row as 6
+                        return [...prev, {...newCol, value, rows: 1, maxRows, tails: {...prevObj.tails}, shiftCols}];
                     }
-                } else if (value === curObj.value) {
-                    console.log('add to column')
-                    if (curObj.bend === 1) {
-                        console.log('create new column')  
-                        let tails = {};
-                        Object.keys(curObj.tails).forEach(key=>{
-                            if (curObj.tails[key] > 1) {
-                                tails[key] = curObj.tails[key] - 1;
-                            }
-                        })
-                        accum[workingIndex] = {...curObj, length: curObj.length + 1, tails: {...tails}};
-                        return [...accum]; 
-                    } else {
-                        accum[workingIndex] = {...curObj, length: curObj.length + 1 };
-                        return [...accum];
+                } else if (value === prevObj.value) { // same value from previous
+                    if (prevObj.maxRows === 1) { // if max rows at 1, create pseudo 'new column'
+                        this._decrementTails(prevObj.tails);
+                        prev[lastIndex] = {...prevObj, rows: prevObj.rows + 1, tails: {...prevObj.tails}};
+                        return [...prev]; 
+                    } else { // increment rows
+                        prev[lastIndex] = {...prevObj, rows: prevObj.rows + 1 };
+                        return [...prev];
                     }
                 } 
             }
-        },prevData);
+        }, prevData);
+    }
+
+    _decrementTails(tails) {
+        Object.keys(tails).forEach(key=>{
+            if (tails[key] > 1) {
+                tails[key] = tails[key] - 1;
+            } else {
+                delete tails[key]; 
+            }
+        })
     }
 
     addMarker(type = 1) {
         this.data = this.convertData([type], this.data);
-        console.log(this.data)
+        console.log(this.data[this.data.length - 1].tails,　'maxRows ' + this.data[this.data.length - 1].maxRows)
+        // if (Math.ceil(this.data.length / this.rows) === this.lastViewableColumn) {
+        //     this.addColumn();
+        // } 
         if (type === 1) {
             this.fillTile(this.data[this.data.length-1], this.predictRed[0], this.predictRed[1])
         } else if (type === 2) {
@@ -202,7 +180,7 @@ class BRMarker extends cc.Node {
                 y: this.height / 2,
                 zIndex: 2
             })
-            text.setColor( cc.color.BLACK)
+            text.setColor(cc.color.BLACK)
             this.addChild(text)
         }
         this.addChild(Marker);

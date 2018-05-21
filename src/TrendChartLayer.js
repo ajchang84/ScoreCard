@@ -5,8 +5,9 @@ class TrendChartLayer extends cc.Layer {
         super();
         this.scale = .922;
         // this.scale = 1
-        this.data = Array.from({length: 25}, () => Math.floor(Math.random() * 3 + 1));
-        // this.data = [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2];
+        this.data = Array.from({length: 55}, () => Math.floor(Math.random() * 3 + 1));
+        // this.data = [2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2];
+        // this.data = [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,2,2,2,2,2,2,1];
         // this.data = [1,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,1,2,2,2,2,2,1,1,1,1,1,2,2,2,2,2];
         // this.data = [];
     }
@@ -29,10 +30,15 @@ class TrendChartLayer extends cc.Layer {
         this.addChild(Big_Road);
 
         Big_Eye_Boy.setPosition(cc.p(350,61));
-        Small_Road.setPosition(cc.p(350,10));
-        Cockroach_Pig.setPosition(cc.p(605,10));
+        Big_Eye_Boy.loadData(this.data.filter(value=>value !==3));
         this.addChild(Big_Eye_Boy);
+
+        Small_Road.setPosition(cc.p(350,10));
+        Small_Road.loadData(this.data.filter(value=>value !==3));
         this.addChild(Small_Road);
+
+        Cockroach_Pig.setPosition(cc.p(605,10));
+        Cockroach_Pig.loadData(this.data.filter(value=>value !==3));
         this.addChild(Cockroach_Pig);
 
         const Border = new cc.DrawNode();
@@ -67,10 +73,12 @@ class TrendChartLayer extends cc.Layer {
         button1.addClickEventListener(()=>{
             Bead_Plate.addMarker(1);
             Big_Road.addMarker(1);
+            Big_Eye_Boy.addMarker(1);
         });
         button2.addClickEventListener(()=>{
             Bead_Plate.addMarker(2);
             Big_Road.addMarker(2);
+            Big_Eye_Boy.addMarker(2);
         });
         button3.addClickEventListener(()=>{
             Bead_Plate.addMarker(3);
